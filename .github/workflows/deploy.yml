@@ -32,6 +32,7 @@ jobs:
           host: ${{ secrets.CPANEL_FTP_HOST }}
           user: ${{ secrets.CPANEL_FTP_USER }}
           password: ${{ secrets.CPANEL_FTP_PASSWORD }}
-          localDir: fintech-apps/dist/fintech-apps
+          localDir: fintech-apps/dist/fintech-apps/browser
           remoteDir: ${{ secrets.CPANEL_TARGET_DIR }}
+          delete: true
 
