@@ -1,1 +1,44 @@
-<p>iban-validator works!</p>
+<div class="iban-validator">
+  <h2>IBAN Validator</h2>
+
+  <div class="input-row">
+    <input
+      class="iban-input"
+      [(ngModel)]="iban"
+      placeholder="Enter IBAN"
+      (input)="onInput()"
+      inputmode="text"
+      autocomplete="off"
+    />
+  </div>
+
+  <button (click)="validateIBAN()">Validate</button>
+
+  <div class="samples">
+    <span>Try:</span>
+    <button
+      *ngFor="let iban of sampleIbans | keyvalue"
+      (click)="useSample(iban.value)"
+    >
+      <img
+        [src]="'https://flagcdn.com/w20/' + iban.key.toLowerCase() + '.png'"
+        alt="{{ iban.key }}"
+        class="flag"
+      />
+      {{ iban.key }}
+    </button>
+  </div>
+
+  <div *ngIf="countryCode" class="breakdown">
+    <img *ngIf="flagUrl" [src]="flagUrl" alt="flag" />
+    <strong>{{ countryName }} ({{ countryCode }})</strong>
+    — Length: {{ ibanLength }} chars
+  </div>
+
+  <div *ngIf="isValid === true" class="result valid animate">
+    ✅ <strong>IBAN is valid.</strong>
+  </div>
+  <div *ngIf="isValid === false" class="result invalid animate">
+    ❌ <strong>Invalid IBAN.</strong>
+  </div>
+</div>

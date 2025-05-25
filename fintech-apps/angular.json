@@ -61,12 +61,15 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "fintech-apps:build"
+          },
           "configurations": {
             "production": {
-              "buildTarget": "fintech-apps:build:production"
+              "browserTarget": "fintech-apps:build:production"
             },
             "development": {
-              "buildTarget": "fintech-apps:build:development"
+              "browserTarget": "fintech-apps:build:development"
             }
           },
           "defaultConfiguration": "development"
