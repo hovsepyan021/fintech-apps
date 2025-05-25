@@ -21,10 +21,19 @@ export class IbanValidatorComponent {
   };
 
   get countryName(): string {
-    return this.countryCode
-      ? new Intl.DisplayNames(['en'], { type: 'region' }).of(this.countryCode) || ''
-      : '';
+    if (!this.countryCode || typeof this.countryCode !== 'string') return '';
+
+    const normalizedCode = this.countryCode.toUpperCase();
+    // ISO 3166-1 alpha-2 country codes are always 2 letters
+    if (!/^[A-Z]{2}$/.test(normalizedCode)) return '';
+
+    try {
+      return new Intl.DisplayNames(['en'], {type: 'region'}).of(normalizedCode) || '';
+    } catch {
+      return '';
+    }
   }
+
 
   get ibanLength(): number {
     return this.iban.replace(/\s+/g, '').length;
@@ -65,7 +74,13 @@ export class IbanValidatorComponent {
   setResult(valid: boolean, raw: string) {
     this.isValid = valid;
     this.countryCode = raw.slice(0, 2);
-    this.flagUrl = `https://flagcdn.com/w40/${this.countryCode.toLowerCase()}.png`;
+    this.validateCountryFlagURL(this.countryCode.toLocaleLowerCase()).then(isValid => {
+      if (isValid) {
+        this.flagUrl = `https://flagcdn.com/w40/${this.countryCode.toLowerCase()}.png`;
+      } else {
+        this.flagUrl = null;
+      }
+    });
   }
 
   copyIban() {
@@ -78,4 +93,34 @@ export class IbanValidatorComponent {
     this.iban = iban;
     this.onInput();
   }
+
+  isValidCountryCode(code: string): boolean {
+    if (typeof code !== 'string') return false;
+
+    const upperCode = code.toUpperCase();
+
+    // Must be exactly 2 uppercase letters
+    if (!/^[A-Z]{2}$/.test(upperCode)) return false;
+
+    try {
+      // Check if Intl.DisplayNames can resolve it
+      const name = new Intl.DisplayNames(['en'], {type: 'region'}).of(upperCode);
+      return !!name;
+    } catch {
+      return false;
+    }
+  }
+
+  validateCountryFlagURL(countryCode: string): Promise<boolean> {
+    return new Promise(resolve => {
+      if (!/^[a-z]{2}$/i.test(countryCode)) return resolve(false);
+
+      const img = new Image();
+      img.src = `https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`;
+
+      img.onload = () => resolve(true);    // image loaded = valid flag
+      img.onerror = () => resolve(false);  // image failed = likely invalid code
+    });
+}
+
 }
