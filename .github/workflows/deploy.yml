@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Node.js
@@ -21,14 +21,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Angular App
+      - name: Build Angular app
         run: npm run build -- --configuration production --base-href=/
 
-      - name: Upload to cPanel via FTP
-        uses: SamKirkland/FTP-Deploy-Action@4.3.4
+      - name: Deploy to cPanel via FTP
+        uses: sebastianpopp/ftp-action@v2.0.0
         with:
-          server: ${{ secrets.CPANEL_FTP_HOST }}
-          username: ${{ secrets.CPANEL_FTP_USER }}
+          host: ${{ secrets.CPANEL_FTP_HOST }}
+          user: ${{ secrets.CPANEL_FTP_USER }}
           password: ${{ secrets.CPANEL_FTP_PASSWORD }}
-          local-dir: dist/fintech-apps/
-          server-dir: ${{ secrets.CPANEL_TARGET_DIR }}
+          localDir: dist/fintech-apps
+          remoteDir: ${{ secrets.CPANEL_TARGET_DIR }}
