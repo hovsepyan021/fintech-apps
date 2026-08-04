@@ -1,2 +1,17 @@
 # fintech-apps
-A collection of lightweight, embeddable Angular-based fintech tools built for seamless integration into modern web platforms. This project includes standalone apps such as a Webhook Viewer, IBAN Validator, and more all designed to simplify financial operations and testing workflows.
+
+Embeddable fintech widgets built with Angular 17. Each tool is a standalone app that can be dropped into an existing site.
+
+Currently included:
+
+- **IBAN validator** — validates country format and checksum client-side.
+
+## Run locally
+
+```bash
+cd fintech-apps
+npm install
+ng serve
+```
+
+Then open `http://localhost:4200/`.
